@@ -61,7 +61,35 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				/* Government App Indian Cultural Colors */
+				gold: {
+					DEFAULT: 'hsl(var(--gold))',
+					foreground: 'hsl(var(--gold-foreground))'
+				},
+				info: {
+					DEFAULT: 'hsl(var(--info))',
+					foreground: 'hsl(var(--info-foreground))'
+				},
+				cream: {
+					DEFAULT: 'hsl(var(--cream))',
+					foreground: 'hsl(var(--cream-foreground))'
 				}
+			},
+			backgroundImage: {
+				'gradient-saffron': 'var(--gradient-saffron)',
+				'gradient-india': 'var(--gradient-india)',
+				'gradient-navy': 'var(--gradient-navy)',
+				'gradient-gold': 'var(--gradient-gold)'
+			},
+			boxShadow: {
+				'saffron': 'var(--shadow-saffron)',
+				'elegant': 'var(--shadow-elegant)',
+				'gold': 'var(--shadow-gold)'
+			},
+			transitionTimingFunction: {
+				'smooth': 'var(--transition-smooth)',
+				'spring': 'var(--transition-spring)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
