@@ -1,6 +1,14 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/government-card';
 import { GovButton } from '@/components/ui/government-button';
+import { Header } from '@/components/layout/Header';
+import { BottomNavigation } from '@/components/layout/BottomNavigation';
+import { ServicesPage } from '@/components/pages/ServicesPage';
+import { DocumentsPage } from '@/components/pages/DocumentsPage';
+import { ApplicationsPage } from '@/components/pages/ApplicationsPage';
+import { ProfilePage } from '@/components/pages/ProfilePage';
+import { useLanguage } from '@/contexts/LanguageContext';
 import {
   Bell,
   Briefcase,
@@ -101,49 +109,36 @@ const getStatusIcon = (status: string) => {
   }
 };
 
-export const MainDashboard = () => {
+interface MainDashboardProps {
+  onSignOut: () => void;
+}
+
+export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
+  const [activeTab, setActiveTab] = useState('home');
+  const { t, currentLanguage } = useLanguage();
+  
   const currentHour = new Date().getHours();
-  const greeting = currentHour < 12 ? 'Good Morning' : currentHour < 18 ? 'Good Afternoon' : 'Good Evening';
-  const greetingHindi = currentHour < 12 ? 'सुप्रभात' : currentHour < 18 ? 'नमस्कार' : 'शुभ संध्या';
+  const greeting = currentHour < 12 ? t('greeting.morning') : currentHour < 18 ? t('greeting.afternoon') : t('greeting.evening');
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <motion.header
-        className="bg-card shadow-elegant border-b"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center space-x-3">
-            <img src={governmentEmblem} alt="Government" className="w-8 h-8" />
-            <div>
-              <h1 className="text-lg font-bold text-accent">Digital Government</h1>
-              <p className="text-xs text-muted-foreground">डिजिटल सरकार</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <motion.button
-              className="relative p-2 rounded-full hover:bg-muted transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Bell className="w-5 h-5 text-accent" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-destructive rounded-full text-xs flex items-center justify-center text-white">
-                3
-              </span>
-            </motion.button>
-            <div className="w-8 h-8 bg-gradient-saffron rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-accent" />
-            </div>
-          </div>
-        </div>
-      </motion.header>
+  const renderCurrentPage = () => {
+    switch (activeTab) {
+      case 'home':
+        return renderHomePage();
+      case 'services':
+        return <ServicesPage onServiceSelect={(service) => console.log('Service selected:', service)} />;
+      case 'documents':
+        return <DocumentsPage />;
+      case 'applications':
+        return <ApplicationsPage />;
+      case 'profile':
+        return <ProfilePage onSignOut={onSignOut} />;
+      default:
+        return renderHomePage();
+    }
+  };
 
-      <div className="p-4 space-y-6">
-        {/* Greeting Card */}
+  const renderHomePage = () => (
+    <div className="p-4 space-y-6 pb-20">{/* Greeting Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -152,12 +147,20 @@ export const MainDashboard = () => {
           <Card variant="saffron" size="lg">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-accent">
-                  {greeting}, Rahul
+                <h2 
+                  className="text-2xl font-bold text-accent"
+                  style={{ fontFamily: currentLanguage.fontFamily }}
+                >
+                  {greeting}, {t('user.name')}
                 </h2>
-                <p className="text-lg text-accent/80">{greetingHindi}, राहुल</p>
+                <p 
+                  className="text-lg text-accent/80"
+                  style={{ fontFamily: currentLanguage.fontFamily }}
+                >
+                  {t('dashboard.subtitle')}
+                </p>
                 <p className="text-sm text-accent/70 mt-2">
-                  You have 2 pending applications
+                  {t('dashboard.pendingApplications')}
                 </p>
               </div>
               <div className="text-right">
@@ -165,7 +168,7 @@ export const MainDashboard = () => {
                   <Sun className="w-5 h-5" />
                   <span>28°C</span>
                 </div>
-                <p className="text-sm text-accent/70">New Delhi</p>
+                <p className="text-sm text-accent/70">{t('location.newDelhi')}</p>
               </div>
             </div>
           </Card>
@@ -177,11 +180,21 @@ export const MainDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-foreground mb-4">Quick Actions</h3>
+          <h3 
+            className="text-xl font-semibold text-foreground mb-4"
+            style={{ fontFamily: currentLanguage.fontFamily }}
+          >
+            {t('dashboard.quickActions')}
+          </h3>
           <div className="grid grid-cols-2 gap-4">
-            {quickActions.map((action, index) => (
+            {[
+              { key: 'applyLicense', icon: <Briefcase className="w-6 h-6" />, variant: 'saffron' as const },
+              { key: 'uploadDocuments', icon: <FolderOpen className="w-6 h-6" />, variant: 'navy' as const },
+              { key: 'trackApplications', icon: <Search className="w-6 h-6" />, variant: 'success' as const },
+              { key: 'payFees', icon: <Wallet className="w-6 h-6" />, variant: 'gold' as const }
+            ].map((action, index) => (
               <motion.div
-                key={action.title}
+                key={action.key}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 * index, duration: 0.4 }}
@@ -200,8 +213,15 @@ export const MainDashboard = () => {
                       {action.icon}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground">{action.title}</h4>
-                      <p className="text-xs text-muted-foreground">{action.description}</p>
+                      <h4 
+                        className="font-semibold text-foreground"
+                        style={{ fontFamily: currentLanguage.fontFamily }}
+                      >
+                        {t(`quickAction.${action.key}.title`)}
+                      </h4>
+                      <p className="text-xs text-muted-foreground">
+                        {t(`quickAction.${action.key}.description`)}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
@@ -216,7 +236,12 @@ export const MainDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-foreground mb-4">Recent Applications</h3>
+          <h3 
+            className="text-xl font-semibold text-foreground mb-4"
+            style={{ fontFamily: currentLanguage.fontFamily }}
+          >
+            {t('dashboard.recentApplications')}
+          </h3>
           <div className="space-y-3">
             {recentApplications.map((app, index) => (
               <motion.div
@@ -233,13 +258,18 @@ export const MainDashboard = () => {
                           {getStatusIcon(app.status)}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-foreground">{app.type}</h4>
+                          <h4 
+                            className="font-semibold text-foreground"
+                            style={{ fontFamily: currentLanguage.fontFamily }}
+                          >
+                            {t(`service.${app.type.toLowerCase().replace(' ', '')}`)}
+                          </h4>
                           <p className="text-sm text-muted-foreground">ID: {app.id}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className={`text-sm font-medium capitalize ${getStatusColor(app.status)}`}>
-                          {app.status}
+                          {t(`status.${app.status}`)}
                         </p>
                         <p className="text-xs text-muted-foreground">{app.date}</p>
                       </div>
@@ -257,7 +287,12 @@ export const MainDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          <h3 className="text-xl font-semibold text-foreground mb-4">Featured Services</h3>
+          <h3 
+            className="text-xl font-semibold text-foreground mb-4"
+            style={{ fontFamily: currentLanguage.fontFamily }}
+          >
+            {t('dashboard.featuredServices')}
+          </h3>
           <div className="space-y-3">
             {featuredServices.map((service, index) => (
               <motion.div
@@ -274,9 +309,14 @@ export const MainDashboard = () => {
                           {service.icon}
                         </div>
                         <div>
-                          <h4 className="font-semibold text-foreground">{service.name}</h4>
+                          <h4 
+                            className="font-semibold text-foreground"
+                            style={{ fontFamily: currentLanguage.fontFamily }}
+                          >
+                            {t(`service.${service.name.toLowerCase().replace(' ', '')}`)}
+                          </h4>
                           <p className="text-sm text-muted-foreground">
-                            Processing: {service.processingTime}
+                            {t('service.processing')}: {service.processingTime}
                           </p>
                         </div>
                       </div>
@@ -305,11 +345,33 @@ export const MainDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <GovButton variant="saffron" size="xl" className="w-full">
-            Explore All Services
+          <GovButton 
+            variant="saffron" 
+            size="xl" 
+            className="w-full"
+            style={{ fontFamily: currentLanguage.fontFamily }}
+          >
+            {t('dashboard.exploreServices')}
           </GovButton>
         </motion.div>
       </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header 
+        title={t('app.title')}
+        showLanguageSelector={true}
+        showNotifications={true}
+        notificationCount={3}
+      />
+
+      {renderCurrentPage()}
+      
+      <BottomNavigation 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab} 
+      />
     </div>
   );
 };

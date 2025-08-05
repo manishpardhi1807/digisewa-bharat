@@ -179,7 +179,7 @@ export const GovernmentApp = () => {
       );
     
     case 'dashboard':
-      return <MainDashboard />;
+      return <MainDashboard onSignOut={() => setCurrentState('splash')} />;
     
     default:
       return <SplashScreen onComplete={handleSplashComplete} />;
