@@ -125,7 +125,16 @@ export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
       case 'home':
         return renderHomePage();
       case 'services':
-        return <ServicesPage onServiceSelect={(service) => console.log('Service selected:', service)} />;
+        return <ServicesPage onServiceSelect={(service) => {
+          // Navigate to specific service application based on service type
+          if (service === 'driving-license') {
+            // This would navigate to license selection
+            console.log('Navigate to license selection');
+          } else {
+            // Navigate to general service application
+            console.log('Service selected:', service);
+          }
+        }} />;
       case 'documents':
         return <DocumentsPage />;
       case 'applications':

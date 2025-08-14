@@ -130,6 +130,12 @@ export const ServicesPage = ({ onServiceSelect }: ServicesPageProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState<'popularity' | 'fee' | 'time'>('popularity');
+  const [showServiceDetail, setShowServiceDetail] = useState<string | null>(null);
+
+  const handleServiceClick = (serviceId: string) => {
+    setShowServiceDetail(serviceId);
+    onServiceSelect(serviceId);
+  };
 
   const filteredServices = services
     .filter(service => {
@@ -244,7 +250,7 @@ export const ServicesPage = ({ onServiceSelect }: ServicesPageProps) => {
                 <Card
                   variant="elevated"
                   className="relative cursor-pointer transition-all duration-300 hover:shadow-saffron hover:scale-105"
-                  onClick={() => onServiceSelect(service.id)}
+                  onClick={() => handleServiceClick(service.id)}
                 >
                   {/* New Service Badge */}
                   {service.newService && (
