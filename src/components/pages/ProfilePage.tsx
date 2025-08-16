@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { User, Settings, Shield, HelpCircle, LogOut, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { GovButton } from '@/components/ui/government-button';
 import { Card } from '@/components/ui/government-card';
+import { PersonalInformationScreen } from '@/components/profile/PersonalInformationScreen';
+import { SecurityPrivacyScreen } from '@/components/profile/SecurityPrivacyScreen';
+import { AppSettingsScreen } from '@/components/profile/AppSettingsScreen';
+import { HelpSupportScreen } from '@/components/profile/HelpSupportScreen';
 
 interface ProfilePageProps {
   onSignOut: () => void;
@@ -10,13 +15,19 @@ interface ProfilePageProps {
 
 export const ProfilePage = ({ onSignOut }: ProfilePageProps) => {
   const { t, currentLanguage } = useLanguage();
+  const [activeScreen, setActiveScreen] = useState<string | null>(null);
 
   const menuItems = [
-    { icon: User, label: 'Personal Information', labelHi: 'व्यक्तिगत जानकारी' },
-    { icon: Shield, label: 'Security & Privacy', labelHi: 'सुरक्षा और गोपनीयता' },
-    { icon: Settings, label: 'App Settings', labelHi: 'ऐप सेटिंग्स' },
-    { icon: HelpCircle, label: 'Help & Support', labelHi: 'सहायता और समर्थन' },
+    { id: 'personal', icon: User, label: 'Personal Information', labelHi: 'व्यक्तिगत जानकारी' },
+    { id: 'security', icon: Shield, label: 'Security & Privacy', labelHi: 'सुरक्षा और गोपनीयता' },
+    { id: 'settings', icon: Settings, label: 'App Settings', labelHi: 'ऐप सेटिंग्स' },
+    { id: 'help', icon: HelpCircle, label: 'Help & Support', labelHi: 'सहायता और समर्थन' },
   ];
+
+  if (activeScreen === 'personal') return <PersonalInformationScreen onBack={() => setActiveScreen(null)} />;
+  if (activeScreen === 'security') return <SecurityPrivacyScreen onBack={() => setActiveScreen(null)} />;
+  if (activeScreen === 'settings') return <AppSettingsScreen onBack={() => setActiveScreen(null)} />;
+  if (activeScreen === 'help') return <HelpSupportScreen onBack={() => setActiveScreen(null)} />;
 
   return (
     <div className="min-h-screen bg-background pb-20">
@@ -43,6 +54,7 @@ export const ProfilePage = ({ onSignOut }: ProfilePageProps) => {
                 key={index}
                 className="w-full"
                 whileTap={{ scale: 0.98 }}
+                onClick={() => setActiveScreen(item.id)}
               >
                 <Card variant="default" className="p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between">

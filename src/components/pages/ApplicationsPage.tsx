@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, CheckCircle, XCircle, Eye, Download } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Eye, Download, Search } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { GovButton } from '@/components/ui/government-button';
 import { Card } from '@/components/ui/government-card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { TrackApplicationScreen } from '@/components/screens/TrackApplicationScreen';
 
 interface Application {
   id: string;
@@ -41,6 +43,9 @@ const applications: Application[] = [
 export const ApplicationsPage = () => {
   const { currentLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState<'active' | 'completed' | 'all'>('active');
+  const [showTrackScreen, setShowTrackScreen] = useState(false);
+
+  if (showTrackScreen) return <TrackApplicationScreen onBack={() => setShowTrackScreen(false)} />;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -64,6 +69,14 @@ export const ApplicationsPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
+      {/* Track Application Button */}
+      <div className="p-4">
+        <GovButton variant="saffron" className="w-full" onClick={() => setShowTrackScreen(true)}>
+          <Search className="w-4 h-4" />
+          <span>{currentLanguage.code === 'hi' ? 'आवेदन ट्रैक करें' : 'Track Application'}</span>
+        </GovButton>
+      </div>
+
       {/* Filter Tabs */}
       <div className="sticky top-16 z-30 bg-white border-b border-border p-4">
         <div className="flex gap-2">
