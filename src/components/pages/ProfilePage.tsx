@@ -46,7 +46,7 @@ export const ProfilePage = ({ onSignOut }: ProfilePageProps) => {
         </Card>
 
         {/* Menu Items */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           {menuItems.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -56,15 +56,25 @@ export const ProfilePage = ({ onSignOut }: ProfilePageProps) => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setActiveScreen(item.id)}
               >
-                <Card variant="default" className="p-4 hover:shadow-md transition-shadow">
+                <Card variant="elevated" className="p-5 hover:shadow-lg transition-all duration-300 border border-border/50">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <Icon className="w-5 h-5 text-primary" />
-                      <span className="font-medium">
-                        {currentLanguage.code === 'hi' ? item.labelHi : item.label}
-                      </span>
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 bg-muted rounded-xl">
+                        <Icon className="w-5 h-5 text-foreground" />
+                      </div>
+                      <div className="text-left">
+                        <span className="font-semibold text-foreground text-base">
+                          {currentLanguage.code === 'hi' ? item.labelHi : item.label}
+                        </span>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {item.id === 'personal' ? 'Manage your profile details' :
+                           item.id === 'security' ? 'Privacy and security settings' :
+                           item.id === 'settings' ? 'App preferences and language' :
+                           'Get help and contact support'}
+                        </p>
+                      </div>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    <ChevronRight className="w-5 h-5 text-muted-foreground" />
                   </div>
                 </Card>
               </motion.button>

@@ -147,41 +147,45 @@ export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
   };
 
   const renderHomePage = () => (
-    <div className="p-4 space-y-6 pb-20">{/* Greeting Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.6 }}
-        >
-          <Card variant="saffron" size="lg">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 
-                  className="text-2xl font-bold text-accent"
-                  style={{ fontFamily: currentLanguage.fontFamily }}
-                >
-                  {greeting}, {t('user.name')}
-                </h2>
-                <p 
-                  className="text-lg text-accent/80"
-                  style={{ fontFamily: currentLanguage.fontFamily }}
-                >
-                  {t('dashboard.subtitle')}
-                </p>
-                <p className="text-sm text-accent/70 mt-2">
-                  {t('dashboard.pendingApplications')}
-                </p>
-              </div>
+    <div className="p-4 space-y-6 pb-20">
+      {/* Hero Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative overflow-hidden"
+      >
+        <div className="bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl p-8 text-white relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/10 rounded-2xl" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <img src={governmentEmblem} alt="Government Emblem" className="w-12 h-12 opacity-90" />
               <div className="text-right">
-                <div className="flex items-center space-x-2 text-accent/80">
+                <div className="flex items-center space-x-2 text-white/90">
                   <Sun className="w-5 h-5" />
-                  <span>28°C</span>
+                  <span className="text-sm">28°C Delhi</span>
                 </div>
-                <p className="text-sm text-accent/70">{t('location.newDelhi')}</p>
               </div>
             </div>
-          </Card>
-        </motion.div>
+            <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: currentLanguage.fontFamily }}>
+              {greeting}, {t('user.name')}
+            </h1>
+            <p className="text-xl text-white/90 mb-4" style={{ fontFamily: currentLanguage.fontFamily }}>
+              Welcome to Digital India Portal
+            </p>
+            <div className="flex items-center space-x-4 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span>3 Applications Active</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="w-4 h-4" />
+                <span>2 Recently Approved</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
         {/* Quick Actions */}
         <motion.div
