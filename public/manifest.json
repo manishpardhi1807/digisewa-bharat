@@ -1,0 +1,96 @@
+{
+  "name": "Digital India Portal - Government Services",
+  "short_name": "Digital India",
+  "description": "Complete digital government services platform for Indian citizens",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF9933",
+  "orientation": "portrait-primary",
+  "categories": ["government", "productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-home.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "label": "Dashboard - Desktop View"
+    },
+    {
+      "src": "/screenshots/mobile-home.png",
+      "type": "image/png",
+      "sizes": "390x844",
+      "form_factor": "narrow",
+      "label": "Dashboard - Mobile View"
+    }
+  ],
+  "features": [
+    "Digital document management",
+    "Application tracking",
+    "Multi-language support",
+    "Secure authentication",
+    "Offline capabilities"
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "New Application",
+      "short_name": "Apply",
+      "description": "Start a new government service application",
+      "url": "/services",
+      "icons": [
+        {
+          "src": "/icons/shortcut-apply.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Track Application",
+      "short_name": "Track",
+      "description": "Check the status of your applications",
+      "url": "/applications",
+      "icons": [
+        {
+          "src": "/icons/shortcut-track.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "My Documents",
+      "short_name": "Documents",
+      "description": "Access your uploaded documents",
+      "url": "/documents",
+      "icons": [
+        {
+          "src": "/icons/shortcut-documents.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}

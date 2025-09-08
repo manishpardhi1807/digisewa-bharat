@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/government-card';
 import { GovButton } from '@/components/ui/government-button';
 import { Header } from '@/components/layout/Header';
@@ -9,6 +9,10 @@ import { DocumentsPage } from '@/components/pages/DocumentsPage';
 import { ApplicationsPage } from '@/components/pages/ApplicationsPage';
 import { ProfilePage } from '@/components/pages/ProfilePage';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useApplications } from '@/hooks/useApplications';
+import { useUserStore } from '@/store/useUserStore';
+import { DashboardSkeleton } from '@/components/ui/loading-skeleton';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import {
   Bell,
   Briefcase,
@@ -76,11 +80,7 @@ const quickActions: QuickAction[] = [
   }
 ];
 
-const recentApplications: RecentApplication[] = [
-  { id: "DL001", type: "Driving License", status: "reviewing", date: "2024-01-15" },
-  { id: "PAN002", type: "PAN Card", status: "approved", date: "2024-01-10" },
-  { id: "PASS003", type: "Passport", status: "submitted", date: "2024-01-20" }
-];
+// Remove hardcoded data - now using store
 
 const featuredServices: Service[] = [
   { name: "Driving License", icon: <Car className="w-5 h-5" />, processingTime: "7-14 days", popularity: 5 },
@@ -116,6 +116,8 @@ interface MainDashboardProps {
 export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
   const [activeTab, setActiveTab] = useState('home');
   const { t, currentLanguage } = useLanguage();
+  const { stats, recentApplications } = useApplications();
+  const { user } = useUserStore();
   
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? t('greeting.morning') : currentHour < 18 ? t('greeting.afternoon') : t('greeting.evening');
@@ -168,7 +170,7 @@ export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
               </div>
             </div>
             <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: currentLanguage.fontFamily }}>
-              {greeting}, {t('user.name')}
+              {greeting}, {user?.name || t('user.name')}
             </h1>
             <p className="text-xl text-white/90 mb-4" style={{ fontFamily: currentLanguage.fontFamily }}>
               Welcome to Digital India Portal
@@ -176,11 +178,11 @@ export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
             <div className="flex items-center space-x-4 text-sm">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span>3 Applications Active</span>
+                <span>{stats.pending} Applications Active</span>
               </div>
               <div className="flex items-center space-x-2">
                 <CheckCircle className="w-4 h-4" />
-                <span>2 Recently Approved</span>
+                <span>{stats.approved} Recently Approved</span>
               </div>
             </div>
           </div>
@@ -371,20 +373,24 @@ export const MainDashboard = ({ onSignOut }: MainDashboardProps) => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header 
-        title={t('app.title')}
-        showLanguageSelector={true}
-        showNotifications={true}
-        notificationCount={3}
-      />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-background">
+        <Header 
+          title={t('app.title')}
+          showLanguageSelector={true}
+          showNotifications={true}
+          notificationCount={stats.pending}
+        />
 
-      {renderCurrentPage()}
-      
-      <BottomNavigation 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab} 
-      />
-    </div>
+        <Suspense fallback={<DashboardSkeleton />}>
+          {renderCurrentPage()}
+        </Suspense>
+        
+        <BottomNavigation 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+        />
+      </div>
+    </ErrorBoundary>
   );
 };
